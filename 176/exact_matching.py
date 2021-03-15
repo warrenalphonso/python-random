@@ -52,7 +52,7 @@ def Z_match(pattern: str, text: str) -> Optional[int]:
     Compute Z-values for each index in text until we find a Z-value |P|, which 
     means we found the pattern in the text. (0th Z-value is set to 0, because
     technically it's |P|.) 
-    Time: O(|T|)    Space: O(|T|)
+    Time: O(|P| + |T|)    Space: O(|P|) (See "Caveats" section.) 
 
     Returns: 
         int if pattern was found in text, else None. 
