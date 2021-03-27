@@ -22,6 +22,5 @@ def timeout(seconds: int):
 
         yield
     finally:
-
         # Cancel schedule SIGALARM
         alarm(0)
