@@ -1,4 +1,5 @@
 from pathlib import Path
+from shutil import rmtree
 from git import Repo, RemoteProgress
 
 
@@ -16,11 +17,27 @@ class CloneProgress(RemoteProgress):
 
 def clone_repo(repo: str):
     directory = f"repos/{repo}"
+
     # Create a directory repos/ if it doesn't already exist
     if not Path(directory).exists():
         Path(directory).mkdir(parents=True, exist_ok=True)
 
-        print(f"Cloning {repo}.")
-        Repo.clone_from(
-            f"https://github.com/{repo}", directory, progress=CloneProgress(repo))
-        print(f"Finished cloning {repo}.")
+        try:
+            print(f"Cloning {repo}.")
+            Repo.clone_from(
+                f"https://github.com/{repo}", directory,
+                progress=CloneProgress(repo))
+            print(f"Finished cloning {repo}.")
+        except Exception as e:
+            print(f"Cloning Git repository {repo} failed. {e}")
+            rmtree(directory)
+    else:
+        try:
+            # Pull repo to update
+            print(f"Already cloned {repo}, pulling to check for changes...")
+            Repo(directory).remotes.origin.pull()
+            print(f"Finished pulling {repo}.")
+        except Exception as e:
+            print(f"Pulling {repo} failed, so trying to re-clone. {e}")
+            rmtree(directory)
+            clone_repo(repo)
