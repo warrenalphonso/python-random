@@ -62,28 +62,32 @@ def extract_names(node):
     imports |= get_imports(node)
 
 
-def parse(node) -> None:
+def parse_node(node) -> None:
     if hasattr(node, "body"):
         for subnode in node.body:
             extract_names(subnode)
-            parse(subnode)
+            parse_node(subnode)
     # For try blocks
     if hasattr(node, "handlers"):
         for subnode in node.handlers:
             extract_names(subnode)
-            parse(subnode)
+            parse_node(subnode)
     if hasattr(node, "orelse"):
         for subnode in node.orelse:
             extract_names(subnode)
-            parse(subnode)
+            parse_node(subnode)
     if hasattr(node, "finalbody"):
         for subnode in node.finalbody:
             extract_names(subnode)
-            parse(subnode)
+            parse_node(subnode)
 
 
-parse(ast.parse(open("../timer.py").read()))
-
-print(variables)
-print(functions)
-print(imports)
+def parse_file(filename: str) -> tuple[set]:
+    try:
+        parsed_ast = ast.parse(open(filename).read())
+    except Exception as e:
+        # TODO: Getting an error in Django...
+        return set(), set(), set()
+    else:
+        parse_node(parsed_ast)
+        return variables, functions, imports
