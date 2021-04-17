@@ -87,7 +87,7 @@ def parse_file(filename: str) -> tuple[set]:
         parsed_ast = ast.parse(open(filename).read())
     except Exception as e:
         # TODO: Getting an error in Django...
-        return set(), set(), set()
+        return set(), set(), set(), ""
     else:
         parse_node(parsed_ast)
-        return variables, functions, imports
+        return variables, functions, imports, filename
