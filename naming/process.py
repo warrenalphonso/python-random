@@ -28,8 +28,7 @@ REPOS = [
     "pandas-dev/pandas",
     "getsentry/sentry",
     "pypa/pipenv",
-    "fastai/fastai",
-    "warrenalphonso/recurring"
+    "fastai/fastai"
 ]
 
 if __name__ == "__main__":
